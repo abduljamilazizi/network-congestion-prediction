@@ -30,6 +30,7 @@ G --> H[Model Prediction]
 H --> I[Prediction Monitoring Logs]
 
 I --> J[logs/predictions.csv]
+```
 
 ---
 
