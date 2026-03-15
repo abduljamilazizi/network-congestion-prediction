@@ -6,7 +6,35 @@ This project implements a machine learning system to detect abnormal network tra
 The system trains a Random Forest model using the CICIDS2017 dataset and deploys the model using FastAPI.
 
 ## System Architecture
+## Model Performance Comparison
 
+Two models were trained to predict network congestion using the CICIDS2017 dataset.
+
+| Model | Type | Accuracy | Notes |
+|------|------|------|------|
+| Random Forest | Machine Learning | ~99% | Works very well with tabular network traffic features |
+| LSTM | Deep Learning | ~85% | Designed for sequential data, but dataset is mostly tabular |
+
+### Conclusion
+
+Random Forest achieved higher accuracy because the dataset contains structured tabular features rather than sequential time-series traffic.
+
+However, LSTM demonstrates how deep learning models can also be applied to network anomaly detection tasks.
+
+## Model Performance Comparison
+
+Two models were trained to predict network congestion using the CICIDS2017 dataset.
+
+| Model | Type | Accuracy | Notes |
+|------|------|------|------|
+| Random Forest | Machine Learning | ~99% | Works very well with tabular network traffic features |
+| LSTM | Deep Learning | ~85% | Designed for sequential data, but dataset is mostly tabular |
+
+### Conclusion
+
+Random Forest achieved higher accuracy because the dataset contains structured tabular features rather than sequential time-series traffic.
+
+However, LSTM demonstrates how deep learning models can also be applied to network anomaly detection tasks.
 ```mermaid
 flowchart TD
 
