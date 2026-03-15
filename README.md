@@ -17,6 +17,14 @@ Two models were trained to predict network congestion using the CICIDS2017 datas
 | Random Forest | Machine Learning | ~99% | Works very well with tabular network traffic features |
 | LSTM | Deep Learning | ~85% | Designed for sequential data, but dataset is mostly tabular |
 
+## Results
+
+Random Forest achieved approximately 99% accuracy on the CICIDS2017 dataset.
+
+The LSTM model achieved approximately 85% accuracy.
+
+Random Forest performed better because the dataset contains tabular network flow features rather than sequential packet time-series data.
+
 ### Conclusion
 
 Random Forest achieved higher accuracy because the dataset contains structured tabular features rather than sequential time-series traffic.
@@ -210,7 +218,21 @@ logs/predictions.csv
 
 ```
 
+## Project Structure
 
+network-congestion-prediction  
+│  
+├── src/  
+│   ├── models/  
+│   └── deployment/  
+│  
+├── docs/images/  
+│   └── system_architecture.png.png  
+│  
+├── logs/  
+├── models/  
+├── README.md  
+└── requirements.txt
 
 \## Author
 
