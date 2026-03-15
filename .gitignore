@@ -10,3 +10,5 @@ mlruns/
 logs/
 
 .ipynb_checkpoints/
+
+lstm_env/
