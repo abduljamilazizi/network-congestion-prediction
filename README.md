@@ -7,6 +7,7 @@ This project implements a machine learning system to detect abnormal network tra
 The system trains a Random Forest model using the CICIDS2017 dataset and deploys the model using FastAPI.
 
 ## System Architecture
+![System Architecture](docs/images/system_architecture.png.png)
 ## Model Performance Comparison
 
 Two models were trained to predict network congestion using the CICIDS2017 dataset.
