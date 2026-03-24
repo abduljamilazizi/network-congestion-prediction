@@ -20,7 +20,7 @@ The goal of this project is to predict abnormal network traffic patterns that ma
 - **Use in project:** Used for training and evaluating models for network congestion prediction
 
 ## Architecture
-![Architecture Diagram](docs/images/architecture.png)
+![Architecture Diagram](docs/images/system_architecture.png.png)
 
 ## Project Pipeline
 Dataset → Data Loading → Data Cleaning → Feature Selection → Model Training → MLflow Tracking → Best Model Selection → FastAPI Deployment → Prediction Logging
