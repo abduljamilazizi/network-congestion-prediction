@@ -35,7 +35,7 @@ network-congestion-prediction/
 │
 ├── docs/
 │   └── images/
-│       └── architecture.png
+│       └── system_architecture.png.png
 │
 ├── logs/
 │   └── predictions.csv
