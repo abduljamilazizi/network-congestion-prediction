@@ -1,245 +1,78 @@
-
 # Network Congestion Prediction using Machine Learning
 
 ## Project Overview
-This project implements a machine learning system to detect abnormal network traffic and potential congestion.
+This project implements an end-to-end MLOps workflow for network congestion prediction using the CICIDS2017 dataset.
 
-The system trains a Random Forest model using the CICIDS2017 dataset and deploys the model using FastAPI.
+The project includes:
+- Data loading and cleaning
+- Model training with Random Forest and LSTM
+- Experiment tracking with MLflow
+- Model deployment using FastAPI
+- Prediction logging for monitoring
+- Version control with GitHub
 
-## System Architecture
-![System Architecture](docs/images/system_architecture.png.png)
-## Model Performance Comparison
+## Problem Statement
+The goal of this project is to predict abnormal network traffic patterns that may indicate congestion or attacks using machine learning and deep learning techniques.
 
-Two models were trained to predict network congestion using the CICIDS2017 dataset.
+## Dataset
+- **Dataset:** CICIDS2017
+- **Type:** Network traffic / flow-based dataset
+- **Use in project:** Used for training and evaluating models for network congestion prediction
 
-| Model | Type | Accuracy | Notes |
-|------|------|------|------|
-| Random Forest | Machine Learning | ~99% | Works very well with tabular network traffic features |
-| LSTM | Deep Learning | ~85% | Designed for sequential data, but dataset is mostly tabular |
+## Models Used
+Two models were trained and compared:
 
-## Results
+- **Random Forest**
+  - Suitable for structured tabular data
+  - Performed better in this project
 
-Random Forest achieved approximately 99% accuracy on the CICIDS2017 dataset.
+- **LSTM**
+  - Suitable for sequential/time-series data
+  - Used for comparison with a deep learning approach
 
-The LSTM model achieved approximately 85% accuracy.
+## Model Performance
+| Model | Accuracy | Notes |
+|------|----------|------|
+| Random Forest | ~99% | Strong performance on tabular traffic features |
+| LSTM | ~85% | Lower performance because dataset is mostly tabular |
 
-Random Forest performed better because the dataset contains tabular network flow features rather than sequential packet time-series data.
-
-### Conclusion
-
-Random Forest achieved higher accuracy because the dataset contains structured tabular features rather than sequential time-series traffic.
-
-However, LSTM demonstrates how deep learning models can also be applied to network anomaly detection tasks.
-
-### Conclusion
-
-Random Forest achieved higher accuracy because the dataset contains structured tabular features rather than sequential time-series traffic.
-
-However, LSTM demonstrates how deep learning models can also be applied to network anomaly detection tasks.
-```mermaid
-flowchart TD
-
-A[CICIDS2017 Dataset] --> B[Data Cleaning & Feature Selection]
-
-B --> C1[Random Forest Training]
-B --> C2[LSTM Training]
-
-C1 --> D1[Random Forest Model]
-C2 --> D2[LSTM Model]
-
-D1 --> E[MLflow Experiment Tracking]
-D2 --> E
-
-E --> F[FastAPI Prediction API]
-
-F --> G[User Request /predict]
-
-G --> H[Model Prediction]
-
-H --> I[Prediction Monitoring Logs]
-
-I --> J[logs/predictions.csv]
-```
-
----
-
-## Technologies Used
-
-- Python
-- Scikit-learn
-- FastAPI
-- MLflow
-- Pandas
-- Git & GitHub
-
----
+## Why Random Forest Performed Better
+Random Forest achieved better results because the CICIDS2017 dataset mainly contains structured tabular network flow features. LSTM is better suited for sequential time-series data, so it was less effective here.
 
 ## Project Pipeline
+Dataset → Data Loading → Data Cleaning → Feature Selection → Model Training → MLflow Tracking → Best Model Selection → FastAPI Deployment → Prediction Logging
 
-Dataset → Data Cleaning → Model Training → MLflow Tracking → API Deployment → Monitoring
+## MLflow Usage
+MLflow was used to:
+- Track experiment runs
+- Log model parameters
+- Log evaluation metrics
+- Compare Random Forest and LSTM results
+- Support best model selection
 
----
+## Best Model Selection
+The best model is selected by comparing evaluation metrics from all trained models.  
+The pipeline chooses the model with the best performance on validation/test data based on the defined comparison metric.
 
-## Model Deployment
+In this project, **Random Forest** was selected as the final model for deployment.
 
-The trained model is deployed using FastAPI.
+## API Deployment
+The trained model is deployed using **FastAPI**.
 
-Run the API:
-=======
-\# Machine Learning-Based Network Congestion Detection
+### Endpoint
+`POST /predict`
 
-
-
-\## Project Overview
-
-
-
-This project implements a machine learning pipeline to detect abnormal network traffic and potential congestion using network flow data.
-
-
-
-The system trains a Random Forest model on the CICIDS2017 dataset and deploys the model as an API using FastAPI.
-
-
-
-\## Features
-
-
-
-\* Network traffic anomaly detection
-
-\* MLflow experiment tracking
-
-\* FastAPI deployment
-
-\* Prediction monitoring
-
-\* GitHub version control
-
-
-
-\## Tech Stack
-
-
-
-\* Python
-
-\* Scikit-learn
-
-\* FastAPI
-
-\* MLflow
-
-\* Pandas
-
-\* Git \& GitHub
-
-
-
-\## Project Architecture
-
-
-
-Dataset → Data Cleaning → Model Training → MLflow Tracking → Model Deployment → Prediction API → Monitoring Logs
-
-
-
-\## API Endpoint
-
-
-
-POST `/predict`
-
-
-
-Example request:
-
-
-
+### Example Input
 ```json
-
 {
-
-&#x20; "Destination\_Port": 443,
-
-&#x20; "Flow\_Duration": 120,
-
-&#x20; "Total\_Fwd\_Packets": 10,
-
-&#x20; "Total\_Backward\_Packets": 8,
-
-&#x20; "Total\_Length\_of\_Fwd\_Packets": 1200,
-
-&#x20; "Total\_Length\_of\_Bwd\_Packets": 900,
-
-&#x20; "Fwd\_Packet\_Length\_Max": 300,
-
-&#x20; "Fwd\_Packet\_Length\_Min": 50,
-
-&#x20; "Fwd\_Packet\_Length\_Mean": 120,
-
-&#x20; "Fwd\_Packet\_Length\_Std": 30
-
+  "Destination_Port": 443,
+  "Flow_Duration": 120,
+  "Total_Fwd_Packets": 10,
+  "Total_Backward_Packets": 8,
+  "Total_Length_of_Fwd_Packets": 1200,
+  "Total_Length_of_Bwd_Packets": 900,
+  "Fwd_Packet_Length_Max": 300,
+  "Fwd_Packet_Length_Min": 50,
+  "Fwd_Packet_Length_Mean": 120,
+  "Fwd_Packet_Length_Std": 30
 }
-
-```
-
-
-
-\## Output
-
-
-
-```
-
-{
-
-&#x20;"prediction": 0,
-
-&#x20;"label": "BENIGN"
-
-}
-
-```
-
-
-
-\## Monitoring
-
-
-
-All predictions are logged in:
-
-
-
-```
-
-logs/predictions.csv
-
-```
-
-## Project Structure
-
-network-congestion-prediction  
-│  
-├── src/  
-│   ├── models/  
-│   └── deployment/  
-│  
-├── docs/images/  
-│   └── system_architecture.png.png  
-│  
-├── logs/  
-├── models/  
-├── README.md  
-└── requirements.txt
-
-\## Author
-
-
-
-Master AI/ML Project
-
-
-
->>>>>>> 8bf669d (Added architecture diagram)
