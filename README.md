@@ -51,3 +51,17 @@ network-congestion-prediction/
 ├── README.md
 ├── requirements.txt
 └── main.py
+
+### 8. Models Used
+```markdown
+## Models Used
+
+### Random Forest
+- A machine learning model suitable for structured tabular data
+- Easy to train and deploy
+- Performed better in this project
+
+### LSTM
+- A deep learning model suitable for sequential or time-series learning
+- Used to compare deep learning with a classical machine learning approach
+- Performed lower than Random Forest for this dataset
