@@ -77,3 +77,51 @@ network-congestion-prediction/
 |------|----------|------|
 | Random Forest | ~99% | Strong performance on structured traffic features |
 | LSTM | ~85% | Lower performance because the dataset is mainly tabular |
+
+## Best Model Selection
+The best model is selected by comparing evaluation metrics from all trained models.
+
+The pipeline uses comparison logic defined in the code. After training the candidate models, their performance is evaluated on validation or test data, and the results are logged into MLflow.
+
+The model with the better performance is selected as the final production model.
+
+In this project, **Random Forest** was selected as the final deployed model.
+
+## MLflow Usage
+MLflow was used to track and compare experiments.
+
+The following were logged:
+- Model name
+- Parameters
+- Metrics
+- Runs
+- Artifacts
+
+MLflow improves reproducibility and supports transparent best model selection.
+
+## API Deployment
+The final selected model is deployed using **FastAPI**.
+
+### Endpoint
+`POST /predict`
+
+### Example Input
+```json
+{
+  "Destination_Port": 443,
+  "Flow_Duration": 120,
+  "Total_Fwd_Packets": 10,
+  "Total_Backward_Packets": 8,
+  "Total_Length_of_Fwd_Packets": 1200,
+  "Total_Length_of_Bwd_Packets": 900,
+  "Fwd_Packet_Length_Max": 300,
+  "Fwd_Packet_Length_Min": 50,
+  "Fwd_Packet_Length_Mean": 120,
+  "Fwd_Packet_Length_Std": 30
+}
+
+{
+  "prediction": 0,
+  "label": "BENIGN"
+}
+
