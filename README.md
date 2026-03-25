@@ -3,23 +3,21 @@
 ## Project Overview
 This project implements an end-to-end MLOps workflow for network congestion prediction using the CICIDS2017 dataset.
 
-The project includes:
-- Data loading and cleaning
-- Model training with Random Forest and LSTM
-- Experiment tracking with MLflow
-- Model deployment using FastAPI
-- Prediction logging for monitoring
-- Version control with GitHub
+The workflow includes data loading, cleaning, model training, experiment tracking with MLflow, best model selection, deployment using FastAPI, and prediction logging for monitoring.
+
+The goal is to build a reproducible and deployment-ready machine learning pipeline for analyzing network traffic behavior.
 
 ## Problem Statement
-The goal of this project is to predict abnormal network traffic patterns that may indicate congestion or attacks using machine learning and deep learning techniques.
+Modern networks generate large amounts of traffic data, and abnormal traffic patterns may indicate congestion, inefficiency, or malicious activity.
+
+The objective of this project is to use machine learning and deep learning techniques to analyze network flow data and predict traffic conditions effectively.
 
 ## Dataset
 - **Dataset:** CICIDS2017
 - **Type:** Network traffic / flow-based dataset
-- **Use in project:** Used for training and evaluating models for network congestion prediction
+- **Why used:** It contains realistic network flow features suitable for training and evaluating machine learning models for traffic analysis.
 
-## Architecture
+## Architecture Diagram
 ![Architecture Diagram](docs/images/system_architecture.png.png)
 
 ## Project Pipeline
@@ -53,5 +51,3 @@ network-congestion-prediction/
 ├── README.md
 ├── requirements.txt
 └── main.py
-```
-
