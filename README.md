@@ -52,6 +52,34 @@ network-congestion-prediction/
 ├── requirements.txt
 └── main.py
 ## Models Used
+## Project Structure
+```text
+network-congestion-prediction/
+│
+├── data/
+│   ├── raw/
+│   └── processed/
+│
+├── docs/
+│   └── images/
+│       └── system_architecture.png.png
+│
+├── logs/
+│   └── predictions.csv
+│
+├── models/
+│   └── random_forest_model.pkl
+│
+├── src/
+│   ├── data/
+│   │   ├── load_data.py
+│   │   └── clean_data.py
+│   └── deployment/
+│       └── app.py
+│
+├── README.md
+├── requirements.txt
+└── main.py
 
 ### Random Forest
 - A machine learning model suitable for structured tabular data
