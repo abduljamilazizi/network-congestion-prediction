@@ -138,3 +138,6 @@ This supports:
 - Auditing outputs
 - Supporting future retraining
 
+## Author
+**Abdul Jamil Azizi**
+
