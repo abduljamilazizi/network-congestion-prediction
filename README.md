@@ -52,8 +52,6 @@ network-congestion-prediction/
 ├── requirements.txt
 └── main.py
 
-### 8. Models Used
-```markdown
 ## Models Used
 
 ### Random Forest
