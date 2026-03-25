@@ -65,3 +65,8 @@ network-congestion-prediction/
 - A deep learning model suitable for sequential or time-series learning
 - Used to compare deep learning with a classical machine learning approach
 - Performed lower than Random Forest for this dataset
+## Model Performance / Results
+| Model | Accuracy | Notes |
+|------|----------|------|
+| Random Forest | ~99% | Strong performance on structured traffic features |
+| LSTM | ~85% | Lower performance because the dataset is mainly tabular |
