@@ -125,3 +125,18 @@ The final selected model is deployed using **FastAPI**.
   "label": "BENIGN"
 }
 
+
+### 13. Prediction Logging / Monitoring
+```markdown
+## Prediction Logging / Monitoring
+All predictions are logged in:
+
+`logs/predictions.csv`
+
+This supports:
+- Monitoring deployed predictions
+- Traceability
+- Debugging
+- Auditing outputs
+- Supporting future retraining
+
