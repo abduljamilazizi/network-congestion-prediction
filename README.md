@@ -138,6 +138,10 @@ This supports:
 - Auditing outputs
 - Supporting future retraining
 
-## Author
+## Created by:
 **Abdul Jamil Azizi**
+
+## Supervised by:
+**Professor Forooz Shahbazi Avarvand**
+
 
