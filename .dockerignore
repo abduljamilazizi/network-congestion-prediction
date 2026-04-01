@@ -1,0 +1,11 @@
+.venv
+lstm_venv
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.git
+.gitignore
+mlruns
+artifacts
+*.log
