@@ -57,7 +57,6 @@ network-congestion-prediction/
 ├── main.py
 ├── README.md
 └── requirements.txt
-
 ## Models Used
 
 ### Random Forest
@@ -93,6 +92,8 @@ The following were logged:
 - Metrics
 - Runs
 - Artifacts
+
+MLflow improves reproducibility and supports transparent best model selection.
 
 ## Unified Environment Setup
 This project uses a single virtual environment for both Random Forest and LSTM.
