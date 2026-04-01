@@ -57,3 +57,48 @@ network-congestion-prediction/
 ├── main.py
 ├── README.md
 └── requirements.txt
+
+## Models Used
+
+### Random Forest
+- A machine learning model suitable for structured tabular data
+- Easy to train and deploy
+- Performed better in this project
+
+### LSTM
+- A deep learning model suitable for sequential or time-series learning
+- Used to compare deep learning with a classical machine learning approach
+- Performed lower than Random Forest for this dataset
+
+## Model Performance / Results
+
+| Model | Accuracy | Notes |
+|------|----------|------|
+| Random Forest | ~99% | Strong performance on structured traffic features |
+| LSTM | ~85% | Lower performance because the dataset is mainly tabular |
+
+## Best Model Selection
+The best model is selected by comparing evaluation metrics from all trained models.
+
+The pipeline compares candidate models after training, logs their metrics to MLflow, and selects the model with the strongest performance.
+
+In this project, **Random Forest** was selected as the final deployed model.
+
+## MLflow Usage
+MLflow was used to track and compare experiments.
+
+The following were logged:
+- Model name
+- Parameters
+- Metrics
+- Runs
+- Artifacts
+
+## Unified Environment Setup
+This project uses a single virtual environment for both Random Forest and LSTM.
+
+### Create and activate the environment
+```cmd
+python -m venv project_env
+project_env\Scripts\activate
+pip install -r requirements.txt
