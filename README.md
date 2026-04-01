@@ -57,6 +57,8 @@ network-congestion-prediction/
 ├── main.py
 ├── README.md
 └── requirements.txt
+
+
 ## Models Used
 
 ### Random Forest
@@ -97,9 +99,114 @@ MLflow improves reproducibility and supports transparent best model selection.
 
 ## Unified Environment Setup
 This project uses a single virtual environment for both Random Forest and LSTM.
+<<<<<<< HEAD
 
 ### Create and activate the environment
 cmd
 python -m venv project_env
 project_env\Scripts\activate
 pip install -r requirements.txt
+=======
+
+### Create and activate the environment
+```cmd
+python -m venv project_env
+project_env\Scripts\activate
+pip install -r requirements.txt
+```
+
+## Run FastAPI Locally
+```cmd
+uvicorn src.deployment.app:app --reload
+```
+
+Open:
+`http://127.0.0.1:8000/docs`
+
+## Docker Deployment
+This project supports Docker-based deployment for the FastAPI service.
+
+### Build and run
+```cmd
+docker compose up --build
+```
+
+Open:
+`http://127.0.0.1:8000/docs`
+
+## Prefect Batch Scheduling
+Prefect is used to schedule and monitor batch prediction runs.
+
+### Start Prefect server
+Terminal 1:
+```cmd
+project_env\Scripts\activate
+prefect server start
+```
+
+### Deploy the flow
+Terminal 2:
+```cmd
+project_env\Scripts\activate
+set PREFECT_API_URL=http://127.0.0.1:4200/api
+python -m batch.deploy
+```
+
+### Trigger a manual run
+```cmd
+prefect deployment run "network_congestion_batch_predict/network-congestion-daily"
+```
+
+### Open Prefect UI
+`http://127.0.0.1:4200`
+
+## API Deployment
+The final selected model is deployed using **FastAPI**.
+
+### Endpoints
+- `GET /`
+- `GET /models`
+- `POST /predict`
+
+### Example Input
+```json
+{
+  "Destination_Port": 443,
+  "Flow_Duration": 120,
+  "Total_Fwd_Packets": 10,
+  "Total_Backward_Packets": 8,
+  "Total_Length_of_Fwd_Packets": 1200,
+  "Total_Length_of_Bwd_Packets": 900,
+  "Fwd_Packet_Length_Max": 300,
+  "Fwd_Packet_Length_Min": 50,
+  "Fwd_Packet_Length_Mean": 120,
+  "Fwd_Packet_Length_Std": 30
+}
+```
+
+### Example Response
+```json
+{
+  "model": "rf",
+  "prediction": 0,
+  "label": "BENIGN"
+}
+```
+
+## Prediction Logging / Monitoring
+All predictions are logged in:
+
+`logs/predictions.csv`
+
+This supports:
+- Monitoring deployed predictions
+- Traceability
+- Debugging
+- Auditing outputs
+- Supporting future retraining
+
+## Created by
+**Abdul Jamil Azizi**
+
+## Supervised by
+**Professor Forooz Shahbazi Avarvand**
