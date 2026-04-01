@@ -99,7 +99,7 @@ MLflow improves reproducibility and supports transparent best model selection.
 This project uses a single virtual environment for both Random Forest and LSTM.
 
 ### Create and activate the environment
-```cmd
+cmd
 python -m venv project_env
 project_env\Scripts\activate
 pip install -r requirements.txt
