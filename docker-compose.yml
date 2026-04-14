@@ -1,9 +1,59 @@
 services:
-  app:
+  trainer_rf:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: network_congestion_trainer_rf
+    command: python src/models/train_model.py
+    volumes:
+      - .:/app
+    restart: "no"
+
+  trainer_lstm:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: network_congestion_trainer_lstm
+    command: python src/models/train_lstm.py
+    volumes:
+      - .:/app
+    restart: "no"
+
+  api:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: network_congestion_app
+    command: uvicorn src.deployment.app:app --host 0.0.0.0 --port 8000
     ports:
       - "8000:8000"
+    volumes:
+      - .:/app
     restart: unless-stopped
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:15
+    container_name: network_congestion_postgres
+    environment:
+      POSTGRES_DB: monitoring_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  adminer:
+    image: adminer
+    container_name: network_congestion_adminer
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:

@@ -9,3 +9,10 @@ pytest
 python-multipart
 joblib
 tensorflow
+psycopg2-binary
+streamlit
+
+
+
+
+
