@@ -3,7 +3,7 @@
 ## Project Overview
 This project implements an end-to-end MLOps workflow for network congestion prediction using the CICIDS2017 dataset.
 
-The workflow includes data loading, cleaning, model training, experiment tracking with MLflow, best model selection, deployment using FastAPI, containerization with Docker, batch scheduling with Prefect, and prediction logging for monitoring.
+The workflow includes data loading, cleaning, model training, experiment tracking with MLflow, best model selection, deployment using FastAPI, containerization with Docker, batch scheduling with Prefect, and a monitoring pipeline with PostgreSQL, Adminer, Streamlit, and Grafana.
 
 The goal is to build a reproducible and deployment-ready machine learning pipeline for analyzing network traffic behavior.
 
@@ -21,7 +21,7 @@ The objective of this project is to use machine learning and deep learning techn
 ![Architecture Diagram](docs/images/system_architecture.png.png)
 
 ## Project Pipeline
-Dataset → Data Loading → Data Cleaning → Feature Selection → Model Training → MLflow Tracking → Best Model Selection → FastAPI Deployment → Docker Containerization → Prefect Scheduling → Prediction Logging
+Dataset → Data Loading → Data Cleaning → Feature Selection → Model Training → MLflow Tracking → Best Model Selection → FastAPI Deployment → Docker Containerization → Monitoring with PostgreSQL/Adminer → Dashboard Visualization → Prediction Logging
 
 ## Project Structure
 ```text
@@ -32,15 +32,29 @@ network-congestion-prediction/
 │   ├── deploy.py
 │   └── train_predict_scheduled.py
 │
+├── dashboard/
+│   └── app.py
+│
+├── monitoring/
+│   └── monitor.py
+│
 ├── docs/
 │   └── images/
 │       └── system_architecture.png.png
+│
+├── data/
+│   ├── processed/
+│   │   └── cleaned_network_data.csv
+│   └── new/
+│       └── new_data.csv
 │
 ├── logs/
 │   └── predictions.csv
 │
 ├── models/
-│   └── random_forest_model.pkl
+│   ├── random_forest_model.pkl
+│   ├── lstm_model.h5
+│   └── lstm_scaler.pkl
 │
 ├── src/
 │   ├── data/
@@ -49,34 +63,39 @@ network-congestion-prediction/
 │   ├── deployment/
 │   │   └── app.py
 │   └── models/
+│       ├── train_model.py
+│       ├── train_model_api.py
+│       ├── train_with_mlflow.py
+│       └── train_lstm.py
 │
 ├── .dockerignore
 ├── .gitignore
 ├── docker-compose.yml
 ├── Dockerfile
 ├── main.py
+├── mlflow.db
 ├── README.md
 └── requirements.txt
-
+```
 
 ## Models Used
 
 ### Random Forest
 - A machine learning model suitable for structured tabular data
 - Easy to train and deploy
-- Performed better in this project
+- Used as the final API model for inference
 
 ### LSTM
-- A deep learning model suitable for sequential or time-series learning
+- A deep learning model suitable for sequential learning
 - Used to compare deep learning with a classical machine learning approach
-- Performed lower than Random Forest for this dataset
+- Monitored and evaluated alongside Random Forest
 
 ## Model Performance / Results
 
 | Model | Accuracy | Notes |
 |------|----------|------|
 | Random Forest | ~99% | Strong performance on structured traffic features |
-| LSTM | ~85% | Lower performance because the dataset is mainly tabular |
+| LSTM | ~87% | Lower than Random Forest but still useful for comparison |
 
 ## Best Model Selection
 The best model is selected by comparing evaluation metrics from all trained models.
@@ -97,22 +116,27 @@ The following were logged:
 
 MLflow improves reproducibility and supports transparent best model selection.
 
-## Unified Environment Setup
-This project uses a single virtual environment for both Random Forest and LSTM.
-<<<<<<< HEAD
+## Reproducibility with Docker
 
-### Create and activate the environment
-cmd
-python -m venv project_env
-project_env\Scripts\activate
-pip install -r requirements.txt
-=======
-
-### Create and activate the environment
+### Build and run the services
 ```cmd
-python -m venv project_env
-project_env\Scripts\activate
-pip install -r requirements.txt
+docker compose up --build
+```
+
+This starts:
+- FastAPI API
+- PostgreSQL database
+- Adminer
+- Grafana
+
+### Train Random Forest in Docker
+```cmd
+docker compose run --rm trainer_rf
+```
+
+### Train LSTM in Docker
+```cmd
+docker compose run --rm trainer_lstm
 ```
 
 ## Run FastAPI Locally
@@ -123,45 +147,7 @@ uvicorn src.deployment.app:app --reload
 Open:
 `http://127.0.0.1:8000/docs`
 
-## Docker Deployment
-This project supports Docker-based deployment for the FastAPI service.
-
-### Build and run
-```cmd
-docker compose up --build
-```
-
-Open:
-`http://127.0.0.1:8000/docs`
-
-## Prefect Batch Scheduling
-Prefect is used to schedule and monitor batch prediction runs.
-
-### Start Prefect server
-Terminal 1:
-```cmd
-project_env\Scripts\activate
-prefect server start
-```
-
-### Deploy the flow
-Terminal 2:
-```cmd
-project_env\Scripts\activate
-set PREFECT_API_URL=http://127.0.0.1:4200/api
-python -m batch.deploy
-```
-
-### Trigger a manual run
-```cmd
-prefect deployment run "network_congestion_batch_predict/network-congestion-daily"
-```
-
-### Open Prefect UI
-`http://127.0.0.1:4200`
-
 ## API Deployment
-The final selected model is deployed using **FastAPI**.
 
 ### Endpoints
 - `GET /`
@@ -193,9 +179,116 @@ The final selected model is deployed using **FastAPI**.
 }
 ```
 
-## Prediction Logging / Monitoring
-All predictions are logged in:
+## Monitoring Pipeline
+The monitoring pipeline evaluates model performance on new incoming data and stores the results in PostgreSQL.
 
+### Monitoring stack
+- **PostgreSQL** stores monitoring metrics and prediction logs
+- **Adminer** provides browser-based database access
+- **Streamlit** provides a custom project dashboard
+- **Grafana** provides professional monitoring visualizations
+
+### Run monitoring locally
+```cmd
+python monitoring\monitor.py
+```
+
+### Open Adminer
+`http://127.0.0.1:8080`
+
+Adminer login:
+- System: `PostgreSQL`
+- Server: `postgres`
+- Username: `postgres`
+- Password: `postgres`
+- Database: `monitoring_db`
+
+### Open Streamlit dashboard
+```cmd
+streamlit run dashboard\app.py
+```
+
+Open:
+`http://localhost:8501`
+
+### Open Grafana
+`http://127.0.0.1:3000`
+
+Grafana login:
+- Username: `admin`
+- Password: your configured Grafana password
+
+## Database Tables
+
+### monitoring_metrics
+Stores:
+- run time
+- model name
+- accuracy
+- precision
+- recall
+- f1 score
+- total samples
+- benign count
+- attack count
+
+### prediction_logs
+Stores:
+- run time
+- model name
+- prediction
+- label name
+
+## Example SQL Queries
+
+### Latest monitoring metrics
+```sql
+SELECT * FROM monitoring_metrics ORDER BY id DESC;
+```
+
+### Latest prediction logs
+```sql
+SELECT * FROM prediction_logs ORDER BY id DESC;
+```
+
+### Accuracy by model
+```sql
+SELECT
+  run_time AS time,
+  accuracy,
+  model_name
+FROM monitoring_metrics
+ORDER BY run_time;
+```
+
+## Prefect Batch Scheduling
+Prefect is used to schedule and monitor batch prediction runs.
+
+### Start Prefect server
+Terminal 1:
+```cmd
+project_env\Scripts\activate
+prefect server start
+```
+
+### Deploy the flow
+Terminal 2:
+```cmd
+project_env\Scripts\activate
+set PREFECT_API_URL=http://127.0.0.1:4200/api
+python -m batch.deploy
+```
+
+### Trigger a manual run
+```cmd
+prefect deployment run "network_congestion_batch_predict/network-congestion-daily"
+```
+
+### Open Prefect UI
+`http://127.0.0.1:4200`
+
+## Prediction Logging
+Predictions are logged in:
 `logs/predictions.csv`
 
 This supports:
