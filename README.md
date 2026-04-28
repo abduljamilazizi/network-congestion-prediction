@@ -3,80 +3,130 @@
 ## Project Overview
 This project implements an end-to-end MLOps workflow for network congestion prediction using the CICIDS2017 dataset.
 
-The workflow includes data loading, cleaning, model training, experiment tracking with MLflow, best model selection, deployment using FastAPI, containerization with Docker, batch scheduling with Prefect, and a monitoring pipeline with PostgreSQL, Adminer, Streamlit, and Grafana.
+The workflow covers:
+- model tracking with MLflow
+- data preprocessing and model training
+- Docker-based reproducibility
+- FastAPI deployment for inference
+- batch orchestration with Prefect
+- monitoring with PostgreSQL and Adminer
+- dashboards with Streamlit and Grafana
+- drift detection on new data
 
-The goal is to build a reproducible and deployment-ready machine learning pipeline for analyzing network traffic behavior.
+The final system compares **Random Forest** and **LSTM** models, selects the best model for deployment, and continuously evaluates performance on new incoming data.
+
+---
 
 ## Problem Statement
 Modern networks generate large amounts of traffic data, and abnormal traffic patterns may indicate congestion, inefficiency, or malicious activity.
 
 The objective of this project is to use machine learning and deep learning techniques to analyze network flow data and predict traffic conditions effectively.
 
+---
+
 ## Dataset
 - **Dataset:** CICIDS2017
 - **Type:** Network traffic / flow-based dataset
-- **Why used:** It contains realistic network flow features suitable for training and evaluating machine learning models for traffic analysis.
+- **Purpose:** Used for training and evaluating machine learning models on network traffic behavior
+
+---
 
 ## Architecture Diagram
 ![Architecture Diagram](docs/images/system_architecture.png.png)
 
-## Project Pipeline
-Dataset → Data Loading → Data Cleaning → Feature Selection → Model Training → MLflow Tracking → Best Model Selection → FastAPI Deployment → Docker Containerization → Monitoring with PostgreSQL/Adminer → Dashboard Visualization → Prediction Logging
+---
 
-## Project Structure
+## Project Logic
+The project is organized according to the following workflow:
+
+1. **Model Tracking**
+   - Run experiments for Random Forest and LSTM
+   - Log runs and metrics with MLflow
+   - Select the best model
+
+2. **Training Pipeline**
+   - Load and clean data
+   - Train Random Forest and LSTM
+   - Save trained models and scaler
+
+3. **Dockerization and Deployment**
+   - Dockerize training and inference
+   - Deploy FastAPI webservice
+   - Run reproducible training with Docker Compose
+
+4. **Monitoring**
+   - Prepare reference data
+   - Generate new batch data
+   - Calculate monitoring metrics
+   - Detect data drift, prediction drift, and performance drift
+   - Store results in PostgreSQL
+   - Access data through Adminer
+   - Visualize with Streamlit and Grafana
+
+---
+
+## Teacher-Style Project Structure
 ```text
 network-congestion-prediction/
 │
-├── batch/
-│   ├── __init__.py
-│   ├── deploy.py
-│   └── train_predict_scheduled.py
+├── 01_model_tracking/
+│   ├── mlflow.db
+│   └── run_experiments.py
 │
-├── dashboard/
-│   └── app.py
+├── 02_training_pipeline/
+│   └── src/
+│       ├── data/
+│       │   ├── load_data.py
+│       │   └── clean_data.py
+│       └── models/
+│           ├── train_model.py
+│           ├── train_model_api.py
+│           ├── train_with_mlflow.py
+│           └── train_lstm.py
 │
-├── monitoring/
-│   └── monitor.py
+├── 03_dockerization_and_deployment/
+│   ├── Dockerfile
+│   ├── docker-compose.yml
+│   ├── batch/
+│   │   ├── __init__.py
+│   │   ├── deploy.py
+│   │   └── train_predict_scheduled.py
+│   └── webservices/
+│       └── app.py
 │
-├── docs/
-│   └── images/
-│       └── system_architecture.png.png
-│
-├── data/
-│   ├── processed/
-│   │   └── cleaned_network_data.csv
-│   └── new/
-│       └── new_data.csv
-│
-├── logs/
-│   └── predictions.csv
-│
-├── models/
-│   ├── random_forest_model.pkl
-│   ├── lstm_model.h5
-│   └── lstm_scaler.pkl
-│
-├── src/
+├── 04_monitoring/
 │   ├── data/
-│   │   ├── load_data.py
-│   │   └── clean_data.py
-│   ├── deployment/
-│   │   └── app.py
-│   └── models/
-│       ├── train_model.py
-│       ├── train_model_api.py
-│       ├── train_with_mlflow.py
-│       └── train_lstm.py
+│   │   ├── reference/
+│   │   │   └── reference_data.csv
+│   │   └── current_batches/
+│   │       └── new_data.csv
+│   ├── scripts/
+│   │   ├── prepare_reference.py
+│   │   ├── generate_batch.py
+│   │   ├── calculate_metrics.py
+│   │   ├── detect_data_drift.py
+│   │   ├── detect_prediction_drift.py
+│   │   ├── detect_performance_drift.py
+│   │   └── monitor.py
+│   └── dashboard/
+│       └── app.py
 │
+├── batch/
+├── dashboard/
+├── monitoring/
+├── src/
+├── data/
+├── models/
+├── docs/
 ├── .dockerignore
 ├── .gitignore
-├── docker-compose.yml
 ├── Dockerfile
-├── main.py
-├── mlflow.db
+├── docker-compose.yml
 ├── README.md
 └── requirements.txt
 ```
+
+---
 
 ## Models Used
 
@@ -90,31 +140,47 @@ network-congestion-prediction/
 - Used to compare deep learning with a classical machine learning approach
 - Monitored and evaluated alongside Random Forest
 
+---
+
 ## Model Performance / Results
 
 | Model | Accuracy | Notes |
 |------|----------|------|
 | Random Forest | ~99% | Strong performance on structured traffic features |
-| LSTM | ~87% | Lower than Random Forest but still useful for comparison |
+| LSTM | ~87% | Lower than Random Forest but useful for comparison |
+
+---
 
 ## Best Model Selection
 The best model is selected by comparing evaluation metrics from all trained models.
 
-The pipeline compares candidate models after training, logs their metrics to MLflow, and selects the model with the strongest performance.
+This is handled in `run_experiments.py`, where:
+- Random Forest and LSTM are both trained
+- their metrics are logged in MLflow
+- their accuracies are compared
+- the best model is written to:
+
+```text
+models/best_model_from_mlflow.txt
+```
 
 In this project, **Random Forest** was selected as the final deployed model.
+
+---
 
 ## MLflow Usage
 MLflow was used to track and compare experiments.
 
 The following were logged:
-- Model name
-- Parameters
-- Metrics
-- Runs
-- Artifacts
+- model type
+- parameters
+- metrics
+- runs
+- artifacts
 
-MLflow improves reproducibility and supports transparent best model selection.
+This supports reproducibility and transparent best-model selection.
+
+---
 
 ## Reproducibility with Docker
 
@@ -125,7 +191,7 @@ docker compose up --build
 
 This starts:
 - FastAPI API
-- PostgreSQL database
+- PostgreSQL
 - Adminer
 - Grafana
 
@@ -139,17 +205,28 @@ docker compose run --rm trainer_rf
 docker compose run --rm trainer_lstm
 ```
 
-## Run FastAPI Locally
+This makes the project reproducible because another user can:
+- build the Docker environment
+- train the models
+- run inference
+- deploy FastAPI
+- run monitoring
+
+---
+
+## FastAPI Deployment
+
+### Run locally
 ```cmd
 uvicorn src.deployment.app:app --reload
 ```
 
 Open:
-`http://127.0.0.1:8000/docs`
+```text
+http://127.0.0.1:8000/docs
+```
 
-## API Deployment
-
-### Endpoints
+### API Endpoints
 - `GET /`
 - `GET /models`
 - `POST /predict`
@@ -179,22 +256,91 @@ Open:
 }
 ```
 
+---
+
+## Batch Pipeline with Prefect
+Batching is implemented in the `batch/` folder.
+
+Main files:
+- `batch/train_predict_scheduled.py`
+- `batch/deploy.py`
+
+### Start Prefect server
+```cmd
+project_env\Scripts\activate
+prefect server start
+```
+
+### Deploy the flow
+```cmd
+project_env\Scripts\activate
+set PREFECT_API_URL=http://127.0.0.1:4200/api
+python -m batch.deploy
+```
+
+### Run the deployment manually
+```cmd
+project_env\Scripts\activate
+set PREFECT_API_URL=http://127.0.0.1:4200/api
+prefect deployment run "network_congestion_batch_predict/network-congestion-daily"
+```
+
+### Open Prefect UI
+```text
+http://127.0.0.1:4200
+```
+
+---
+
 ## Monitoring Pipeline
-The monitoring pipeline evaluates model performance on new incoming data and stores the results in PostgreSQL.
 
-### Monitoring stack
-- **PostgreSQL** stores monitoring metrics and prediction logs
-- **Adminer** provides browser-based database access
-- **Streamlit** provides a custom project dashboard
-- **Grafana** provides professional monitoring visualizations
+The monitoring pipeline evaluates the performance of the deployed models on new incoming data.
 
-### Run monitoring locally
+### Monitoring logic
+The monitoring pipeline is modular and follows these steps:
+
+1. `prepare_reference.py`
+   - prepares the reference dataset from the cleaned CICIDS data
+
+2. `generate_batch.py`
+   - creates the current batch of new incoming data
+
+3. `calculate_metrics.py`
+   - evaluates Random Forest and LSTM on the new batch
+   - calculates accuracy, precision, recall, and F1 score
+   - writes results to PostgreSQL
+
+4. `detect_data_drift.py`
+   - compares feature distributions between reference and current batch
+
+5. `detect_prediction_drift.py`
+   - compares prediction distribution across runs
+
+6. `detect_performance_drift.py`
+   - compares current metrics with previous monitoring runs
+
+7. `monitor.py`
+   - orchestrates the full monitoring workflow
+
+### Run monitoring
 ```cmd
 python monitoring\monitor.py
 ```
 
-### Open Adminer
-`http://127.0.0.1:8080`
+---
+
+## Database Setup
+
+### Database
+The project uses **PostgreSQL** as the monitoring database.
+
+### Adminer
+**Adminer** is attached to PostgreSQL for browser-based database access.
+
+Open:
+```text
+http://127.0.0.1:8080
+```
 
 Adminer login:
 - System: `PostgreSQL`
@@ -203,25 +349,16 @@ Adminer login:
 - Password: `postgres`
 - Database: `monitoring_db`
 
-### Open Streamlit dashboard
-```cmd
-streamlit run dashboard\app.py
-```
+### Important note
+- **PostgreSQL** stores the data
+- **Adminer** is used to view and query that data
 
-Open:
-`http://localhost:8501`
-
-### Open Grafana
-`http://127.0.0.1:3000`
-
-Grafana login:
-- Username: `admin`
-- Password: your configured Grafana password
+---
 
 ## Database Tables
 
-### monitoring_metrics
-Stores:
+### `monitoring_metrics`
+Stores summary metrics for each monitoring run:
 - run time
 - model name
 - accuracy
@@ -232,14 +369,42 @@ Stores:
 - benign count
 - attack count
 
-### prediction_logs
-Stores:
+### `prediction_logs`
+Stores detailed prediction records:
 - run time
 - model name
 - prediction
 - label name
 
-## Example SQL Queries
+### `data_drift_metrics`
+Stores feature-level drift information:
+- feature name
+- reference mean and std
+- current mean and std
+- mean shift
+- std shift
+- drift flag
+
+### `prediction_drift_metrics`
+Stores prediction distribution changes:
+- current benign/attack rate
+- previous benign/attack rate
+- rate shifts
+- drift flag
+
+### `performance_drift_metrics`
+Stores performance degradation information:
+- current accuracy
+- previous accuracy
+- current F1
+- previous F1
+- accuracy drop
+- F1 drop
+- drift flag
+
+---
+
+## Important SQL Queries
 
 ### Latest monitoring metrics
 ```sql
@@ -251,52 +416,119 @@ SELECT * FROM monitoring_metrics ORDER BY id DESC;
 SELECT * FROM prediction_logs ORDER BY id DESC;
 ```
 
-### Accuracy by model
+### Data drift
 ```sql
-SELECT
-  run_time AS time,
-  accuracy,
-  model_name
-FROM monitoring_metrics
-ORDER BY run_time;
+SELECT * FROM data_drift_metrics ORDER BY id DESC;
 ```
 
-## Prefect Batch Scheduling
-Prefect is used to schedule and monitor batch prediction runs.
+### Prediction drift
+```sql
+SELECT * FROM prediction_drift_metrics ORDER BY id DESC;
+```
 
-### Start Prefect server
-Terminal 1:
+### Performance drift
+```sql
+SELECT * FROM performance_drift_metrics ORDER BY id DESC;
+```
+
+---
+
+## Dashboards
+
+### Streamlit
+Run:
 ```cmd
-project_env\Scripts\activate
-prefect server start
+streamlit run dashboard\app.py
 ```
 
-### Deploy the flow
-Terminal 2:
-```cmd
-project_env\Scripts\activate
-set PREFECT_API_URL=http://127.0.0.1:4200/api
-python -m batch.deploy
+Open:
+```text
+http://localhost:8501
 ```
 
-### Trigger a manual run
-```cmd
-prefect deployment run "network_congestion_batch_predict/network-congestion-daily"
+The Streamlit dashboard shows:
+- latest RF metrics
+- latest LSTM metrics
+- comparison between models
+- prediction logs
+
+### Grafana
+Open:
+```text
+http://127.0.0.1:3000
 ```
 
-### Open Prefect UI
-`http://127.0.0.1:4200`
+Grafana is connected to PostgreSQL and visualizes:
+- Accuracy by Model
+- F1 Score by Model
+- Precision by Model
+- Recall by Model
+- Benign vs Attack Counts
+- Total Samples Processed
+- Data Drift: Mean Shift by Feature
+- Prediction Drift: Attack Rate Shift
+- Performance Drift: Accuracy Drop
+
+---
+
+## Drift Detection
+
+### Data Drift
+Detects whether the incoming batch data distribution has changed compared to the reference dataset.
+
+### Prediction Drift
+Detects whether the prediction distribution has changed across monitoring runs.
+
+### Performance Drift
+Detects whether model performance has degraded compared to previous monitoring runs.
+
+This makes the monitoring pipeline more robust and closer to real MLOps practice.
+
+---
 
 ## Prediction Logging
-Predictions are logged in:
-`logs/predictions.csv`
+Predictions are also logged in:
+
+```text
+logs/predictions.csv
+```
 
 This supports:
-- Monitoring deployed predictions
-- Traceability
-- Debugging
-- Auditing outputs
-- Supporting future retraining
+- monitoring
+- traceability
+- debugging
+- auditing
+- future retraining
+
+---
+
+## How to Demonstrate the Project
+
+### Reproducibility
+- show `Dockerfile`
+- show `docker-compose.yml`
+- run Docker training
+- run FastAPI deployment
+
+### Monitoring
+- run `python monitoring\monitor.py`
+- show Adminer tables
+- show Streamlit dashboard
+- show Grafana dashboard
+
+### Batching
+- show Prefect server
+- show deployment
+- show flow runs
+
+### GitHub
+- show the teacher-style folders:
+  - `01_model_tracking`
+  - `02_training_pipeline`
+  - `03_dockerization_and_deployment`
+  - `04_monitoring`
+
+---
 
 ## Created by
 **Abdul Jamil Azizi**
