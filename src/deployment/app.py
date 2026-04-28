@@ -1,40 +1,46 @@
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from typing import Literal
 import joblib
 import pandas as pd
+import numpy as np
 import os
 from datetime import datetime
-import numpy as np
 
-# Optional LSTM support
-LSTM_AVAILABLE = True
-LSTM_LOAD_ERROR = None
+# Optional LSTM
 try:
     from tensorflow import keras
-except Exception as e:
+    LSTM_AVAILABLE = True
+except:
     LSTM_AVAILABLE = False
-    LSTM_LOAD_ERROR = f"TensorFlow import failed: {e}"
 
-# Load Random Forest model
-rf_model = joblib.load("models/random_forest_model.pkl")
+# =========================
+# Load Best Model
+# =========================
+MODEL_PATH_RF = "models/best_model.pkl"
+MODEL_PATH_LSTM = "models/best_model.h5"
 
-# Load LSTM model if available
-lstm_model = None
-if LSTM_AVAILABLE:
-    try:
-        lstm_model = keras.models.load_model("models/lstm_model.h5")
-    except Exception as e:
-        LSTM_AVAILABLE = False
-        LSTM_LOAD_ERROR = f"LSTM model load failed: {e}"
+model = None
+model_type = None
 
+if os.path.exists(MODEL_PATH_RF):
+    model = joblib.load(MODEL_PATH_RF)
+    model_type = "rf"
+
+elif os.path.exists(MODEL_PATH_LSTM) and LSTM_AVAILABLE:
+    model = keras.models.load_model(MODEL_PATH_LSTM)
+    model_type = "lstm"
+
+else:
+    raise Exception("No trained model found! Run training pipeline first.")
+
+# =========================
+# FastAPI App
+# =========================
 app = FastAPI(title="Network Congestion Prediction API")
 
-# Ensure logs folder exists
-os.makedirs("logs", exist_ok=True)
-
-
-# Define input schema
+# =========================
+# Input Schema
+# =========================
 class NetworkInput(BaseModel):
     Destination_Port: float
     Flow_Duration: float
@@ -48,8 +54,25 @@ class NetworkInput(BaseModel):
     Fwd_Packet_Length_Std: float
 
 
-def build_input_dict(data: NetworkInput) -> dict:
+# =========================
+# Home Endpoint
+# =========================
+@app.get("/")
+def home():
     return {
+        "message": "Network Congestion Prediction API Running",
+        "model_loaded": model_type
+    }
+
+
+# =========================
+# Predict Endpoint
+# =========================
+@app.post("/predict")
+def predict(data: NetworkInput):
+
+    # Convert input to dataframe
+    input_dict = {
         "Destination Port": data.Destination_Port,
         "Flow Duration": data.Flow_Duration,
         "Total Fwd Packets": data.Total_Fwd_Packets,
@@ -62,64 +85,36 @@ def build_input_dict(data: NetworkInput) -> dict:
         "Fwd Packet Length Std": data.Fwd_Packet_Length_Std,
     }
 
-
-@app.get("/")
-def home():
-    return {"message": "Network Congestion Prediction API is running"}
-
-
-@app.get("/models")
-def list_models():
-    return {
-        "available_models": {
-            "rf": True,
-            "lstm": LSTM_AVAILABLE,
-        },
-        "lstm_status": "loaded" if LSTM_AVAILABLE else LSTM_LOAD_ERROR,
-    }
-
-
-@app.post("/predict")
-def predict(
-    data: NetworkInput,
-    model: Literal["rf", "lstm"] = Query(
-        default="rf",
-        description="Choose prediction model: 'rf' for Random Forest or 'lstm' for LSTM"
-    ),
-):
-    input_dict = build_input_dict(data)
     input_df = pd.DataFrame([input_dict])
 
-    if model == "rf":
-        prediction = int(rf_model.predict(input_df)[0])
+    # =========================
+    # Prediction Logic
+    # =========================
+    if model_type == "rf":
+        prediction = model.predict(input_df)[0]
 
-    elif model == "lstm":
-        if not LSTM_AVAILABLE or lstm_model is None:
-            raise HTTPException(
-                status_code=500,
-                detail=f"LSTM model is not available. {LSTM_LOAD_ERROR}"
-            )
-
-        # LSTM was trained on 10 features reshaped to (samples, 1, features)
+    elif model_type == "lstm":
         input_array = input_df.values.astype("float32")
-        input_array = input_array.reshape((input_array.shape[0], 1, input_array.shape[1]))
-
-        lstm_probs = lstm_model.predict(input_array, verbose=0)
-        prediction = int(np.argmax(lstm_probs, axis=1)[0])
+        input_array = input_array.reshape((1, 1, input_array.shape[1]))
+        prediction = (model.predict(input_array) > 0.5).astype(int)[0][0]
 
     else:
-        raise HTTPException(status_code=400, detail="Unsupported model")
+        raise HTTPException(status_code=500, detail="Model type unknown")
 
     label = "BENIGN" if prediction == 0 else "ATTACK"
 
-    # Log prediction to CSV
-    log_entry = input_dict.copy()
-    log_entry["timestamp"] = datetime.now().isoformat()
-    log_entry["model"] = model
-    log_entry["prediction"] = prediction
-    log_entry["label"] = label
+    # =========================
+    # Logging
+    # =========================
+    os.makedirs("logs", exist_ok=True)
 
-    log_df = pd.DataFrame([log_entry])
+    log_data = input_dict.copy()
+    log_data["timestamp"] = datetime.now().isoformat()
+    log_data["model"] = model_type
+    log_data["prediction"] = int(prediction)
+    log_data["label"] = label
+
+    log_df = pd.DataFrame([log_data])
     log_file = "logs/predictions.csv"
 
     if os.path.exists(log_file):
@@ -128,7 +123,7 @@ def predict(
         log_df.to_csv(log_file, mode="w", header=True, index=False)
 
     return {
-        "model": model,
-        "prediction": prediction,
-        "label": label,
+        "model_used": model_type,
+        "prediction": int(prediction),
+        "label": label
     }

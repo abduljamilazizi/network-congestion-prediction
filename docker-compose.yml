@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: network_congestion_trainer_rf
-    command: python src/models/train_model.py
+    command: python src/models/train_model_api.py
     volumes:
       - .:/app
     restart: "no"
@@ -55,5 +55,17 @@ services:
     depends_on:
       - postgres
 
+  grafana:
+    image: grafana/grafana:latest
+    container_name: network_congestion_grafana
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    volumes:
+      - grafana_data:/var/lib/grafana
+
 volumes:
   postgres_data:
+  grafana_data:
