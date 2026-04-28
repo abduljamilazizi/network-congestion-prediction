@@ -65,7 +65,7 @@ The project is organized according to the following workflow:
 
 ---
 
-## Teacher-Style Project Structure
+## Project Structure
 ```text
 network-congestion-prediction/
 │
