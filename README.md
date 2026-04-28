@@ -32,7 +32,8 @@ The objective of this project is to use machine learning and deep learning techn
 ---
 
 ## Architecture Diagram
-![Architecture Diagram](docs/images/system_architecture.png.png)
+## Architecture Diagram
+![Project Architecture](docs/images/architecture.png)
 
 ---
 
