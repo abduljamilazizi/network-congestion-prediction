@@ -19,9 +19,8 @@ jobs:
         python-version: "3.10"
 
     - name: Install dependencies
-      run: pip install -r requirements.txt
+      run: echo "No dependencies needed"
 
-    # ✅ SAFE VALIDATION (ONLY CHECK FILES)
     - name: Check Monitoring Files
       run: |
         echo "Checking monitoring pipeline files..."
