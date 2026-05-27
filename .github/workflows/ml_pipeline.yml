@@ -19,28 +19,16 @@ jobs:
         python-version: "3.10"
 
     - name: Install dependencies
+      run: pip install -r requirements.txt
+
+    # ✅ SAFE VALIDATION (ONLY CHECK FILES)
+    - name: Check Monitoring Files
       run: |
-        pip install -r requirements.txt
+        echo "Checking monitoring pipeline files..."
 
-    # ✅ SAFE VALIDATION USING PYTHON (NO CRASH)
-    - name: Validate Monitoring Scripts
-      run: |
-        python - <<EOF
-        print("Starting monitoring validation...")
+        test -f 04_monitoring/scripts/monitor.py
+        test -f 04_monitoring/scripts/detect_data_drift.py
+        test -f 04_monitoring/scripts/detect_prediction_drift.py
+        test -f 04_monitoring/scripts/detect_performance_drift.py
 
-        scripts = [
-            "04_monitoring/scripts/detect_data_drift.py",
-            "04_monitoring/scripts/detect_prediction_drift.py",
-            "04_monitoring/scripts/detect_performance_drift.py"
-        ]
-
-        for script in scripts:
-            try:
-                print(f"Checking {script}")
-                open(script).close()
-                print(f"{script} exists and is readable")
-            except Exception as e:
-                print(f"Skipping {script}: {e}")
-
-        print("Monitoring CI/CD validation completed successfully")
-        EOF
+        echo "All monitoring scripts exist ✅"
