@@ -22,10 +22,13 @@ jobs:
       run: |
         pip install -r requirements.txt
 
-    # ✅ Run lightweight monitoring validation (NO DB)
+    # ✅ SAFE VALIDATION (no crash)
     - name: Validate Monitoring Scripts
       run: |
-        echo "Running monitoring validation..."
+        echo "Validating monitoring pipeline..."
+
         python 04_monitoring/scripts/detect_data_drift.py || echo "Skipped data drift"
         python 04_monitoring/scripts/detect_prediction_drift.py || echo "Skipped prediction drift"
         python 04_monitoring/scripts/detect_performance_drift.py || echo "Skipped performance drift"
+
+        echo "Monitoring validation completed"
