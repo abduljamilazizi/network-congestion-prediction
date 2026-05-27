@@ -38,6 +38,8 @@ def get_connection():
 
 
 def main():
+    print("CI/CD monitoring demo")
+
     reference_df = pd.read_csv(REFERENCE_PATH)
     batch_df = pd.read_csv(BATCH_PATH)
 
