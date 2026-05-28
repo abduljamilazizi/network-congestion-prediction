@@ -1,6 +1,6 @@
 import pandas as pd
 
-print("CI/CD Monitoring Pipeline Started...")
+print("🔥 CI/CD LIVE DEMO SUCCESS 🔥")
 
 try:
     df = pd.read_csv("04_monitoring/data/current_batches/new_data.csv")
