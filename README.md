@@ -1,153 +1,1 @@
-# 🚀 Network Congestion Prediction using MLOps
-
-This project implements a complete **end-to-end MLOps pipeline** for predicting network congestion. It includes training, deployment, monitoring, streaming, and CI/CD automation.
-
----
-
-# 📌 Project Overview
-
-The system:
-- Predicts network congestion using ML models
-- Automates training & deployment
-- Monitors performance and detects drift
-- Simulates real-time streaming data
-- Uses CI/CD for automation
-
----
-
-# 🧠 MLOps Architecture
-
-![Architecture](docs/architecture.png)
-
----
-
-# 🏗️ Project Structure
-
-01_model_tracking/  
-02_training_pipeline/  
-03_dockerization_and_deployment/  
-04_monitoring/  
-05_streaming/  
-.github/  
-README.md  
-
----
-
-# ⚙️ Stage 1: Model Tracking (MLflow)
-
-- Models: Random Forest, LSTM  
-- Tracks experiments, metrics, and parameters  
-- Selects best model  
-
----
-
-# 🤖 Stage 2: Training Pipeline
-
-- Data preprocessing  
-- Feature engineering  
-- Model training & evaluation  
-
----
-
-# 🐳 Stage 3: Deployment
-
-- FastAPI REST API  
-- Docker containerization  
-- Supports batch & API prediction  
-
-Run API:
-uvicorn src.deployment.app:app --reload  
-
----
-
-# 🔄 Stage 4: Batch Pipeline (Prefect)
-
-- Workflow orchestration  
-- Loads data → preprocess → predict → store logs  
-
----
-
-# 📊 Stage 5: Monitoring & Drift Detection
-
-Metrics:
-- Accuracy, Precision, Recall, F1-score  
-
-Drift:
-- Data Drift  
-- Prediction Drift  
-- Performance Drift  
-
----
-
-# 🗄️ Stage 6: Database (PostgreSQL)
-
-Stores:
-- monitoring_metrics  
-- prediction_logs  
-- drift metrics  
-
----
-
-# 📈 Stage 7: Visualization (Grafana)
-
-Dashboards:
-- Model performance  
-- Drift detection  
-- Real-time logs  
-
----
-
-# 🔄 Stage 8: Streaming Pipeline
-
-- Simulates real-time data  
-- Sends row-by-row predictions  
-
-Run:
-python 05_streaming/streaming_pipeline.py  
-
----
-
-# 🔁 Stage 9: CI/CD Pipeline
-
-Implemented using GitHub Actions:
-
-- Trigger on every push  
-- Install dependencies  
-- Run scripts  
-- Validate pipeline  
-
-Workflow:
-Code Push → Actions → Run → Validate → Success  
-
----
-
-# 🧠 System Flow
-
-Data → Training → Model → Deployment → Streaming → Monitoring → Database → Grafana → CI/CD  
-
----
-
-# 📊 Technologies
-
-Python, Scikit-learn, TensorFlow, MLflow, FastAPI, Docker, PostgreSQL, Grafana, Prefect, GitHub Actions  
-
----
-
-# ▶️ Run Project
-
-docker-compose up  
-python 04_monitoring/scripts/monitor.py  
-python 05_streaming/streaming_pipeline.py  
-uvicorn src.deployment.app:app --reload  
-
----
-
-# 🎤 Summary
-
-Complete MLOps pipeline with automation, monitoring, and CI/CD.
-
----
-
-# 👨‍💻 Author
-
-Abdul Jamil Azizi
+# 🚀 Network Congestion Prediction using MLOpsThis project implements a complete **MLOps pipeline** for predicting network congestion using machine learning models. It covers the full lifecycle including training, deployment, monitoring, streaming, and CI/CD automation.\---# 📌 Project OverviewThe goal of this project is to:* Predict network congestion using ML models* Automate training and deployment* Monitor model performance* Detect data and prediction drift* Simulate real-time data streaming* Implement CI/CD for automation\---# 🏗️ Project Structure01\_model\_tracking/02\_training\_pipeline/03\_dockerization\_and\_deployment/04\_monitoring/05\_streaming/.github/README.md\---# ⚙️ Stage 1: Model Tracking (MLflow)* Random Forest and LSTM models* Experiment tracking with MLflow* Model comparison\---# 🤖 Stage 2: Training Pipeline* Data preprocessing* Model training and evaluation\---# 🐳 Stage 3: Deployment (Docker + FastAPI)* FastAPI for serving predictions* Docker for containerizationRun API:uvicorn src.deployment.app:app --reload\---# 📊 Stage 4: Monitoring \& Drift Detection* Accuracy, Precision, Recall, F1-score* Data, Prediction, and Performance Drift* PostgreSQL for storing metrics* Grafana for visualizationRun monitoring:python 04\_monitoring/scripts/monitor.py\---# 🔄 Stage 5: Streaming Pipeline* Simulates real-time data streamingRun:python 05\_streaming/streaming\_pipeline.py\---# 🔁 Stage 6: CI/CD Pipeline* Implemented using GitHub Actions* Runs automatically on push* Validates pipeline execution\---# 🧠 System ArchitectureData → Model → Prediction → Monitoring → Database → Grafana  ↓  CI/CD Automation\---# 📊 TechnologiesPython, Scikit-learn, TensorFlow, MLflow, FastAPI, Docker, PostgreSQL, Grafana, GitHub Actions\---# ▶️ Run Projectdocker-compose up  python 04\_monitoring/scripts/monitor.py  python 05\_streaming/streaming\_pipeline.py  uvicorn src.deployment.app:app --reload\---# 🎤 SummaryComplete MLOps pipeline with training, deployment, monitoring, streaming, and CI/CD.\---# 👨‍💻 AuthorAbdul Jamil Azizi
