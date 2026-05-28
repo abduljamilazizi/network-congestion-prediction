@@ -10,24 +10,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # 1. Checkout code
     - name: Checkout repository
       uses: actions/checkout@v3
 
+    # 2. Setup Python
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: "3.10"
 
+    # 3. Install required dependencies
     - name: Install dependencies
-      run: echo "No dependencies needed"
-
-    - name: Check Monitoring Files
       run: |
-        echo "Checking monitoring pipeline files..."
+        pip install pandas
 
-        test -f 04_monitoring/scripts/monitor.py
-        test -f 04_monitoring/scripts/detect_data_drift.py
-        test -f 04_monitoring/scripts/detect_prediction_drift.py
-        test -f 04_monitoring/scripts/detect_performance_drift.py
-
-        echo "All monitoring scripts exist ✅"
+    # 4. Run monitoring pipeline (CI/CD safe)
+    - name: Run Monitoring Pipeline
+      run: |
+        python 04_monitoring/scripts/ci_monitor.py
