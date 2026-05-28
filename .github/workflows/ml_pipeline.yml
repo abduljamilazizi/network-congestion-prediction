@@ -1,4 +1,4 @@
-name: Monitoring CI/CD Pipeline
+name: Production Monitoring CI/CD Pipeline
 
 on:
   push:
@@ -9,23 +9,34 @@ jobs:
   monitoring-pipeline:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: monitoring_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     steps:
-    # 1. Checkout code
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    # 2. Setup Python
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: "3.10"
 
-    # 3. Install required dependencies
     - name: Install dependencies
       run: |
-        pip install pandas
+        pip install pandas psycopg2-binary
 
-    # 4. Run monitoring pipeline (CI/CD safe)
-    - name: Run Monitoring Pipeline
+    - name: Run Monitoring Script
       run: |
         python 04_monitoring/scripts/ci_monitor.py
