@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - test-production-cicd
 
 jobs:
   monitoring-pipeline:
@@ -25,18 +26,26 @@ jobs:
           --health-retries=5
 
     steps:
+    # 1. Checkout code
     - name: Checkout repository
       uses: actions/checkout@v3
 
+    # 2. Setup Python
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: "3.10"
 
+    # 3. Install dependencies
     - name: Install dependencies
       run: |
         pip install pandas psycopg2-binary
 
-    - name: Run Monitoring Script
+    # 4. Wait for PostgreSQL to be ready
+    - name: Wait for PostgreSQL
+      run: sleep 10
+
+    # 5. Run monitoring script
+    - name: Run Monitoring Pipeline
       run: |
         python 04_monitoring/scripts/ci_monitor.py
