@@ -1,1 +1,62 @@
-# 🚀 Network Congestion Prediction using MLOpsThis project implements a complete **MLOps pipeline** for predicting network congestion using machine learning models. It covers the full lifecycle including training, deployment, monitoring, streaming, and CI/CD automation.\---# 📌 Project OverviewThe goal of this project is to:* Predict network congestion using ML models* Automate training and deployment* Monitor model performance* Detect data and prediction drift* Simulate real-time data streaming* Implement CI/CD for automation\---# 🏗️ Project Structure01\_model\_tracking/02\_training\_pipeline/03\_dockerization\_and\_deployment/04\_monitoring/05\_streaming/.github/README.md\---# ⚙️ Stage 1: Model Tracking (MLflow)* Random Forest and LSTM models* Experiment tracking with MLflow* Model comparison\---# 🤖 Stage 2: Training Pipeline* Data preprocessing* Model training and evaluation\---# 🐳 Stage 3: Deployment (Docker + FastAPI)* FastAPI for serving predictions* Docker for containerizationRun API:uvicorn src.deployment.app:app --reload\---# 📊 Stage 4: Monitoring \& Drift Detection* Accuracy, Precision, Recall, F1-score* Data, Prediction, and Performance Drift* PostgreSQL for storing metrics* Grafana for visualizationRun monitoring:python 04\_monitoring/scripts/monitor.py\---# 🔄 Stage 5: Streaming Pipeline* Simulates real-time data streamingRun:python 05\_streaming/streaming\_pipeline.py\---# 🔁 Stage 6: CI/CD Pipeline* Implemented using GitHub Actions* Runs automatically on push* Validates pipeline execution\---# 🧠 System ArchitectureData → Model → Prediction → Monitoring → Database → Grafana  ↓  CI/CD Automation\---# 📊 TechnologiesPython, Scikit-learn, TensorFlow, MLflow, FastAPI, Docker, PostgreSQL, Grafana, GitHub Actions\---# ▶️ Run Projectdocker-compose up  python 04\_monitoring/scripts/monitor.py  python 05\_streaming/streaming\_pipeline.py  uvicorn src.deployment.app:app --reload\---# 🎤 SummaryComplete MLOps pipeline with training, deployment, monitoring, streaming, and CI/CD.\---# 👨‍💻 AuthorAbdul Jamil Azizi
+# 🚀 Network Congestion Prediction (MLOps Project)
+
+This project implements a complete MLOps pipeline for predicting network congestion using Machine Learning and Deep Learning models, along with monitoring, orchestration, and CI/CD automation.
+
+## 📌 Project Overview
+
+- Random Forest (ML)
+- LSTM (Deep Learning)
+- Monitoring & Metrics
+- Prefect (Batch)
+- Streaming Simulation
+- Grafana / Streamlit Visualization
+- CI/CD (GitHub Actions)
+- Docker (Deployment-ready)
+
+## 🏗️ Architecture
+
+Data → Training → Models → Monitoring → Visualization → CI/CD → Deployment
+
+## ⚙️ Technologies
+
+Python, Scikit-learn, TensorFlow, MLflow, Prefect, PostgreSQL, Grafana, Streamlit, Docker, GitHub Actions
+
+## 📊 Monitoring
+
+- Accuracy
+- Precision
+- Recall
+- F1 Score
+- Stored in PostgreSQL
+
+## 🔁 CI/CD
+
+- Runs on git push
+- Validates system
+- Builds Docker image
+- Simulates deployment
+
+## ▶️ Run
+
+Activate:
+project_env\Scripts\activate
+
+API:
+uvicorn main:app --reload
+
+Monitoring:
+python 04_monitoring/scripts/monitor.py
+
+Streaming:
+python streaming/streaming_pipeline.py
+
+Prefect:
+prefect server start
+
+Dashboard:
+streamlit run 04_monitoring/dashboard/app.py
+
+## 👨‍💻 Author
+
+Abdul Jamil Azizi
+https://github.com/abduljamilazizi
