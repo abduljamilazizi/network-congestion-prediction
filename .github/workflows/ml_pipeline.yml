@@ -1,4 +1,4 @@
-name: Production Monitoring CI/CD Pipeline
+name: Advanced MLOps CI/CD Pipeline
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
       - test-production-cicd
 
 jobs:
-  monitoring-pipeline:
+  ci-pipeline:
     runs-on: ubuntu-latest
 
     services:
@@ -26,6 +26,7 @@ jobs:
           --health-retries=5
 
     steps:
+
     # 1. Checkout code
     - name: Checkout repository
       uses: actions/checkout@v3
@@ -41,11 +42,30 @@ jobs:
       run: |
         pip install pandas psycopg2-binary
 
-    # 4. Wait for PostgreSQL to be ready
+    # 4. Code validation (syntax check)
+    - name: Validate Python Code
+      run: |
+        python -m py_compile ci_monitor.py
+
+    # 5. Data validation
+    - name: Validate Data
+      run: |
+        if [ ! -f "04_monitoring/data/current_batches/new_data.csv" ]; then
+          echo "Data file missing!"
+          exit 1
+        fi
+        echo "Data file exists"
+
+    # 6. Wait for DB
     - name: Wait for PostgreSQL
       run: sleep 10
 
-    # 5. Run monitoring script
-    - name: Run Monitoring Pipeline
+    # 7. Run monitoring validation
+    - name: Run Monitoring Validation
       run: |
-        python 04_monitoring/scripts/ci_monitor.py
+        python ci_monitor.py
+
+    # 8. CD-ready step (simulation)
+    - name: Deployment Simulation
+      run: |
+        echo "System ready for deployment (Docker/CD can be added here)"
