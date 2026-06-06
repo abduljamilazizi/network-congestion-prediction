@@ -1,62 +1,31 @@
-# 🚀 Network Congestion Prediction (MLOps Project)
+# 🚀 Network Congestion Prediction — End-to-End MLOps Pipeline
 
-This project implements a complete MLOps pipeline for predicting network congestion using Machine Learning and Deep Learning models, along with monitoring, orchestration, and CI/CD automation.
+**Abdul Jamil Azizi** · Master in IT Digitalization and Sustainability  
+Lucerne University of Applied Sciences and Arts (HSLU) · Module: Artificial Intelligence
+
+[![CI/CD](https://github.com/abduljamilazizi/network-congestion-prediction/actions/workflows/ci-cd-pipeline.yml/badge.svg)](https://github.com/abduljamilazizi/network-congestion-prediction/actions)
+![Python](https://img.shields.io/badge/Python-3.11-blue)
+![Docker](https://img.shields.io/badge/Docker-25.0.3-blue)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.110.0-green)
+![License](https://img.shields.io/badge/license-MIT-lightgrey)
+
+---
 
 ## 📌 Project Overview
 
-- Random Forest (ML)
-- LSTM (Deep Learning)
-- Monitoring & Metrics
-- Prefect (Batch)
-- Streaming Simulation
-- Grafana / Streamlit Visualization
-- CI/CD (GitHub Actions)
-- Docker (Deployment-ready)
+This project implements a **complete, production-grade MLOps pipeline** for predicting network congestion from flow-level traffic data. The contribution is architectural: it demonstrates how operational practices identified in the MLOps literature can be realised in a reproducible, fully automated system using only open-source tools.
 
-## 🏗️ Architecture
+Two model families are compared:
 
-Data → Training → Models → Monitoring → Visualization → CI/CD → Deployment
+| Model | Accuracy | Precision | Recall | F1 | Selected |
+|---|---|---|---|---|---|
+| **Random Forest** | **0.9939** | **>0.99** | **>0.99** | **>0.99** | ✅ |
+| LSTM | 0.8528 | — | — | — | ❌ |
 
-## ⚙️ Technologies
+The Random Forest is selected as the production model due to its superior performance on the tabular, non-sequential nature of flow-level network statistics.
 
-Python, Scikit-learn, TensorFlow, MLflow, Prefect, PostgreSQL, Grafana, Streamlit, Docker, GitHub Actions
+---
 
-## 📊 Monitoring
+## 🏗️ System Architecture
 
-- Accuracy
-- Precision
-- Recall
-- F1 Score
-- Stored in PostgreSQL
-
-## 🔁 CI/CD
-
-- Runs on git push
-- Validates system
-- Builds Docker image
-- Simulates deployment
-
-## ▶️ Run
-
-Activate:
-project_env\Scripts\activate
-
-API:
-uvicorn main:app --reload
-
-Monitoring:
-python 04_monitoring/scripts/monitor.py
-
-Streaming:
-python streaming/streaming_pipeline.py
-
-Prefect:
-prefect server start
-
-Dashboard:
-streamlit run 04_monitoring/dashboard/app.py
-
-## 👨‍💻 Author
-
-Abdul Jamil Azizi
-(https://github.com/abduljamilazizi/network-congestion-prediction)
+```
