@@ -259,7 +259,7 @@ The full IEEE-format project report is available in [`docs/`](./docs/).
 
 ## 🤖 AI Tool Usage
 
-Claude, Chatgpt, Google gemini as well as Grammerly was used in an assistive capacity for LaTeX formatting, academic writing refinement, and code review support. All technical decisions — architecture, tool selection, model choice, evaluation methodology — were made exclusively by the author. See Section XVIII of the project report for full disclosure.
+Claude, Chatgpt, Google gemini as well as Grammerly was used in an assistive capacity for LaTeX formatting, academic writing refinement, and code review support. All technical decisions architecture, tool selection, model choice, evaluation methodology were made exclusively by the author. See Section XVIII of the project report for full disclosure.
 
 ---
 
