@@ -1,38 +1,25 @@
 # 🚀 Network Congestion Prediction (MLOps Project)
 
-![Python](https://img.shields.io/badge/Python-3.10-blue)
-![ML](https://img.shields.io/badge/Machine%20Learning-Random%20Forest-green)
-![DL](https://img.shields.io/badge/Deep%20Learning-LSTM-red)
-![CI/CD](https://img.shields.io/badge/CI/CD-GitHub%20Actions-orange)
-![Docker](https://img.shields.io/badge/Container-Docker-blue)
-![Status](https://img.shields.io/badge/Project-Production%20Ready-brightgreen)
+This project implements a complete MLOps pipeline for predicting network congestion using Machine Learning and Deep Learning models, along with monitoring, orchestration, and CI/CD automation.
 
----
-
-## 📌 Overview
-
-This project implements a complete **MLOps pipeline** for predicting network congestion using both Machine Learning and Deep Learning models.
-
----
-
-## 🧠 Models
+## 📌 Project Overview
 
 - Random Forest (ML)
 - LSTM (Deep Learning)
-
----
+- Monitoring & Metrics
+- Prefect (Batch)
+- Streaming Simulation
+- Grafana / Streamlit Visualization
+- CI/CD (GitHub Actions)
+- Docker (Deployment-ready)
 
 ## 🏗️ Architecture
 
 Data → Training → Models → Monitoring → Visualization → CI/CD → Deployment
 
----
-
-## ⚙️ Tech Stack
+## ⚙️ Technologies
 
 Python, Scikit-learn, TensorFlow, MLflow, Prefect, PostgreSQL, Grafana, Streamlit, Docker, GitHub Actions
-
----
 
 ## 📊 Monitoring
 
@@ -40,8 +27,7 @@ Python, Scikit-learn, TensorFlow, MLflow, Prefect, PostgreSQL, Grafana, Streamli
 - Precision
 - Recall
 - F1 Score
-
----
+- Stored in PostgreSQL
 
 ## 🔁 CI/CD
 
@@ -49,8 +35,6 @@ Python, Scikit-learn, TensorFlow, MLflow, Prefect, PostgreSQL, Grafana, Streamli
 - Validates system
 - Builds Docker image
 - Simulates deployment
-
----
 
 ## ▶️ Run
 
@@ -72,9 +56,7 @@ prefect server start
 Dashboard:
 streamlit run 04_monitoring/dashboard/app.py
 
----
-
 ## 👨‍💻 Author
 
-Abdul Jamil Azizi  
+Abdul Jamil Azizi
 https://github.com/abduljamilazizi
